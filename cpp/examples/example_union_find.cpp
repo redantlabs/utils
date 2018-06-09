@@ -1,4 +1,4 @@
-#include "union_find.hpp"
+#include <union_find.hpp>
 #include <iostream>
 
 typedef t_union_find<true>     union_find_t;
