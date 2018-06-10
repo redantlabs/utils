@@ -18,3 +18,7 @@ framework. The workflow provides many options for easily implementing
 modules from existing algorithms, connecting them, creating
 executables with command line options and analyzing the workflow
 itself. See the examples in workflow/examples to see how to use it.
+
+###Todo
+
+The base is done, we now need to implement the features.
