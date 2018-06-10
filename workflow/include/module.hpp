@@ -16,6 +16,8 @@ permissions and limitations under the License.
 #ifndef _MODULE_HPP_
 #define _MODULE_HPP_
 
+#include <iostream>
+
 /* Base definition of a module. */
 
 //The module itself, base of the workflow
