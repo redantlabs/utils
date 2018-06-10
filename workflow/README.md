@@ -11,7 +11,15 @@ There are two levels of developments within the framework : (i) by creating modu
 
 ## Creating modules
 
-Let say that you do want to create a module for a sort algorithm. First, you have to encapsulate your algorithm in a class if it is not the case, like that :
+Let say that you do want to create a module for a sort algorithm. To do so, there is only one include that is required from this package :
+
+There is only one include, that is the one of the module definition :
+
+```c++
+#include<module.hpp>
+```
+
+To be able to use an algorithm in the modules, it has to be encapsulated in a class. If it is not the case, you can simply do as follow :
 
 ```c++
 template <class _nt = int>
@@ -46,11 +54,6 @@ We now have the simplest way to define the module : to use the module, we just p
 
 ```c++
 typedef t_module<t_sort<int> > module_sort_t;
-```
-There is only one include, that is the one of the module definition :
-
-```c++
-#include<module.hpp>
 ```
 
 ## Creating workflows
