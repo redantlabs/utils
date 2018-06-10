@@ -112,3 +112,67 @@ public:
 ```
 
 ## Creating workflows
+
+Creating a workflow consists on defining modules and connecting them. Lets consider that we want to sort input numbers, then find the kth smallest element. We previously defined the sort module (defined in the file [examples/sort.hpp](examples/sort.hpp), and an implementation of the find module can be found in the file [examples/find.hpp](examples/find.hpp). First, we need the workflow definitions :
+
+```c++
+#include<workflow.hpp>
+```
+Then, we need to typedef the two modules that we need :
+
+```c++
+typedef t_module<t_sort<int> > module_sort_t;
+typedef t_module<t_find<int> > module_find_t;
+```
+
+We now connect the modules so that we first ort, then find. This is done using **connectors**, in particular the *next* connector :
+
+```c++
+typedef t_module<t_next<module_sort_t, module_find_t> > module_t;
+```
+There are different connectors depending on how modules have to be connected :
+- *t_next<_module1,_module2>* : connects two modules such that the first one is executed before the second;
+- *t_conjunction<_module1,_module2>* : connects two modules without ordering on the execution;
+- *t_condition<_predicate,_module1,_module2>* : takes a predicate and runs the first module if the predicates is true, the second otherwise;
+- *t_loop<_predicate,_module>* : takes a predicate and runs the module while the predicate returns true.
+
+We now define the workflow from our module :
+
+```c++
+typedef t_workflow<module_t>               workflow_t;
+```
+Finally, we can define all the data that will be used in the workflow :
+
+```c++
+//Data definition
+struct data_t : public workflow_t::data_t
+{
+  //data in memory
+  std::vector<int> nums;
+  std::vector<int>& get_nums(){return nums;}
+  
+  std::size_t k;
+  std::size_t& get_k(){return k;}
+  
+  int res;
+  int& get_res(){return res;}
+};
+```
+Note that at this step, we define the pure virtual accessors defined in the modules. This has the advantage that the structure used for the data can encapsulates any other pre-existing data structures (for example from another project), and the virtual accessors can be defined using these other data structures.
+
+If necessary, we can also define an options manager that will handle the command-line options (note that the file [include/options.hpp](include/options.hpp) has to be included and the project has to be linked with the Boost library) :
+
+```c++
+typedef t_options_manager<module_t>        options_manager_t;
+```
+Running the defined workflow is done as follow :
+
+```c++
+  data_t d;  
+  options_manager_t om;
+  if(!om(argc, argv, d))
+    return 0;
+  workflow_t wf;
+  wf.run(d);
+```
+
