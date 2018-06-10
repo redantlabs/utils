@@ -36,9 +36,10 @@ Since there is no condition on the type of the number to sort, the class is a te
 template <class _nt>
 struct t_data<t_module<t_sort<_nt> > >{
   virtual std::vector<_nt>& get_nums() = 0;
+  virtual int get_dummy() = 0;
 };
 ```
-We now need to specify how the module has to execute the algorithm :
+The dummy parameter is not necessary but is defined just to have an additional parameter. We now need to specify how the module has to execute the algorithm :
 
 ```c++
 template <class _nt>
@@ -54,6 +55,60 @@ We now have the simplest way to define the module : to use the module, we just p
 
 ```c++
 typedef t_module<t_sort<int> > module_sort_t;
+```
+
+There are other possibilities to enrich the module. For example, it is possible to specify command-line options using the Boost library. Note that the Boost library is not necessary for using this package, except if one wants to define command-line options. To do so, the following file has to be included :
+
+```c++
+#include<options.hpp>
+```
+Then, adding the options can be done as follow :
+
+```c++
+template <class _nt>
+class t_options<t_module<t_sort<_nt> > >
+{
+public:
+  boost::program_options::options_description operator()(t_data<t_module<t_sort<_nt> > >& d)
+  {
+    boost::program_options::options_description options("Sort options");
+    options.add_options()
+      ("dummy",
+       boost::program_options::value<int>(&d.get_dummy())->default_value(0),
+       "dummy option.");
+    return options;
+  }
+};
+```
+
+It is also possible to print on the log (the standard output by default) some custom information on the execution of the module :
+
+```c++
+template <class _nt>
+class t_printer<t_module<t_sort<_nt> > >
+{
+public:
+  void operator()(t_data<t_module<t_sort<_nt> > >& d)
+  {
+    std::cout << "Sort done over " << d.get_nums().size() << " numbers." << std::endl;
+  }
+};
+```
+Finally, you can specify that the module reports some results into files after its execution :
+
+```c++
+template <class _nt>
+class t_reporter<t_module<t_sort<_nt> > >
+{
+public:
+  void operator()(t_data<t_module<t_sort<_nt> > >& d)
+  {
+    std::ofstream out("output.txt");
+    for(size_t i = 0; i < d.get_nums().size(); i++) 
+       out << d.get_nums()[i] << std::endl;
+    out.close();
+  }
+};
 ```
 
 ## Creating workflows
