@@ -32,7 +32,7 @@ permissions and limitations under the License.
   last operation, before inserting a vertex, or before unioning two
   independent sets. This feature does not change the time complexity
   of the main operations, but it takes extra memory space. If the
-  template tag is false, then no operation is recorded an the rewind
+  template tag is false, then no operation is recorded and the rewind
   feature is disabled, saving memory.
  */
 
