@@ -22,10 +22,7 @@ permissions and limitations under the License.
    otherwise executes the second module. */
 
 template <class _predicate, class _module1, class _module2 = t_module<void> >
-struct t_condition
-{
-  typedef _predicate predicate_t;
-};
+struct t_condition{};
 
 template <class _predicate, class _module1, class _module2>
 struct t_data<t_module<t_condition<_predicate, _module1, _module2> > > : public t_data<_module1>, public t_data<_module2>{};

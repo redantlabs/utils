@@ -1,18 +1,12 @@
 #include <iostream>
 #include <string>
 #include <workflow.hpp>
+#include <options.hpp>
 #include "sort.hpp"
 #include "find.hpp"
 //Problem : We cannot have several instances of the same module,
 //otherwise we would have multiple inheritences from the same
 //class : is that a problem ?
-
-//Todo :
-
-//-- verbosity
-//-- prefixes ?
-//-- workflow analysis
-//-- report occurs only for specified modules
 
 //Sort a vector, then find the kth element iff k < nums.size()
 
@@ -23,7 +17,7 @@ typedef t_module<t_find<NT> > module_find_t;
   
 //Predicate to know if k < nums.size()
 struct predicate_t{
-  bool operator()(t_data<module_find_t>& d)const{return d.get_k() < d.get_nums().size();}
+  bool operator()(t_data<module_find_t>& d)const{return 0 < d.get_k() && d.get_k() <= d.get_nums().size();}
 };
 
 //Connection of modules
@@ -32,6 +26,7 @@ typedef t_module<t_next<module_sort_t, module_find_if_t> > module_t;
 
 //Workflow encapsulating the whold
 typedef t_workflow<module_t>               workflow_t;
+typedef t_options_manager<module_t>        options_manager_t;
 
 //Data definition
 struct data_t : public workflow_t::data_t
@@ -47,7 +42,23 @@ struct data_t : public workflow_t::data_t
   NT& get_res(){return res;}
 };
 
-int main(int argv, char** argc)
+//options for find and sort
+template <>
+class t_options<module_t>
+{
+public:
+  boost::program_options::options_description operator()(t_data<module_t>& d)
+  {
+    boost::program_options::options_description options("Find options");
+    options.add_options()
+      ("k",
+       boost::program_options::value<std::size_t>(&d.get_k())->default_value(0),
+       "kth position.");
+    return options;
+  }
+};
+
+int main(int argc, char** argv)
 {  
   //prepare the data
   data_t d;
@@ -61,6 +72,9 @@ int main(int argv, char** argc)
   d.verbose = 1;
   
   //execute the workflow
+  options_manager_t options_manager;
+  if(!options_manager(argc, argv, d))
+    return 0;
   workflow_t wf;
   wf.run(d);
 

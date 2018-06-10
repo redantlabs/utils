@@ -22,27 +22,20 @@ permissions and limitations under the License.
 #include <condition.hpp>
 #include <loop.hpp>
 
-//Problem : We cannot have several instances of the same module,
-//otherwise we would have multiple inheritences from the same
-//class : is that a problem ?
-
-//Todo :
-
-//-- loaders and options
-//-- verbosity
-//-- prefixes ?
-//-- command line options
-//-- workflow analysis
-//-- report occurs only for specified modules
-
 template <class _module>
 class t_workflow{
 public:
-  typedef t_data<_module> data_t;  
+  struct data_t;
+  
   void run(data_t& d)
   {
     t_runner<_module>()(d);
   }
+};
+
+template <class _module>
+struct t_workflow<_module>::data_t : public t_data<_module>{
+  short unsigned verbose;
 };
 
 #endif

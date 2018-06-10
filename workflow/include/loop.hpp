@@ -21,10 +21,7 @@ permissions and limitations under the License.
 /* Repeats a module while a predicate is true. */
 
 template <class _predicate, class _module>
-struct t_loop
-{
-  typedef _predicate predicate;
-};
+struct t_loop{};
 
 template <class _predicate, class _module>
 struct t_data<t_module<t_loop<_predicate, _module> > > : public t_data<_module>{};
