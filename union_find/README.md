@@ -16,7 +16,6 @@ A full example is provided in the examples folder. Here is a short version :
 
 ```c++
 #include <union_find.hpp>
-#include <iostream>
 
 typedef t_union_find<true>     union_find_t;
 
