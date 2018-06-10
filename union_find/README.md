@@ -14,7 +14,7 @@ The *Rewind* feature does not modify the space / time complexity of [Union-Find]
 
 A full example is provided in the examples folder. Here is a short version :
 
-```
+```c++
 #include <union_find.hpp>
 #include <iostream>
 
