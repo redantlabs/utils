@@ -3,16 +3,16 @@
 #include <workflow.hpp>
 #include "sort.hpp"
 #include "find.hpp"
+
 //Problem : We cannot have several instances of the same module,
 //otherwise we would have multiple inheritences from the same
 //class : is that a problem ?
 
 //Todo :
 
-//-- verbosity
-//-- prefixes ?
-//-- workflow analysis
-//-- report occurs only for specified modules
+//-- Handle the printer
+//-- Handle the report (should be for specific modules)
+//-- Handle workflow analysis (graphviz, workflow integrity, etc...)
 
 //Sort a vector, then find the kth element iff k < nums.size()
 

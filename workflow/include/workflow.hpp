@@ -36,6 +36,7 @@ public:
 template <class _module>
 struct t_workflow<_module>::data_t : public t_data<_module>{
   short unsigned verbose;
+  std::ostream*  log;
 };
 
 #endif
