@@ -45,6 +45,9 @@ public:
       ("help,h",
        boost::program_options::bool_switch(&d.help)->default_value(false),
        "Print this help message.")
+      ("config-file,c",
+       boost::program_options::value<std::string>(&d.config_filepath)->default_value(""),
+       "Path to a Boost options configuration file.")
       ("log,l",
        boost::program_options::bool_switch(&d.store_log)->default_value(false),
        "Store the log in a file.")
@@ -140,6 +143,15 @@ public:
 	std::cerr << "\n";
 	exit(EXIT_FAILURE);
       }
+    
+      //Read options from input file.
+      if(d.config_filepath.compare("") != 0)
+	{
+	  std::ifstream in(d.config_filepath.c_str());
+	  boost::program_options::store(boost::program_options::parse_config_file(in, options, true), vm);
+	  in.close();
+	  boost::program_options::notify(vm); // recognized options
+	}
     
       if(d.help)
 	{

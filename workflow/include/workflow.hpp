@@ -39,6 +39,7 @@ struct t_data<t_module<start_token_t> >{
   std::string    directory;//prefix to add to all output files
   std::string    application_name;//name of the application
   std::string    helper;//helper to display instead of running the workflow
+  std::string    config_filepath;//path to a configuration file for boost options, if any
   std::ofstream  log;//output stream for the log if not std::cout, automatically set if needed
   std::string    prefix;//prefix to add to all output files
   t_data()
@@ -49,6 +50,7 @@ struct t_data<t_module<start_token_t> >{
       directory("."),
       application_name("application"),
       helper("Sample application."),
+      config_filepath(""),
       log(),
       prefix("application_")
   {
