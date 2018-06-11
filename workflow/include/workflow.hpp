@@ -22,6 +22,8 @@ permissions and limitations under the License.
 #include <condition.hpp>
 #include <loop.hpp>
 #include <fstream>
+#include <sstream>
+#include <chrono>
 
 //Token to specify the start module, that is the first module to be
 //ran.
@@ -32,21 +34,41 @@ template <>
 struct t_data<t_module<start_token_t> >{
   bool           help;//help message instead of starting the application
   bool           store_log;//switch to store the log in a file
-  std::ofstream  log;//output stream for the log (std::cout by default)
   short unsigned verbose;//verbose level (0 is none)
+  bool           uid;//add a time based unique identifier to the prefix
+  std::string    directory;//prefix to add to all output files
+  std::string    application_name;//name of the application
+  std::string    helper;//helper to display instead of running the workflow
+  std::ofstream  log;//output stream for the log if not std::cout, automatically set if needed
   std::string    prefix;//prefix to add to all output files
-  t_data() : help(false), store_log(false), verbose(0), log(), prefix("") {}
+  t_data()
+    : help(false),
+      store_log(false),
+      verbose(0),
+      uid(false),
+      directory("."),
+      application_name("application"),
+      helper("Sample application."),
+      log(),
+      prefix("application_")
+  {
+  }
 };
 
 //Set the data when starting the workflow
 template <>
-class t_executer<t_data<t_module<start_token_t> > >
+class t_executer<t_module<start_token_t> >
 {
 public:
   void operator()(t_data<t_module<start_token_t> >& d)
   {
+    std::ostringstream oss;
+    oss << d.directory << "/" << d.application_name << "_";
+    if(d.uid)
+      oss << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count() << "_";
+    d.prefix = oss.str();
     if(d.store_log)
-      d.log.open((d.prefix + "_log.txt").c_str());      
+      d.log.open((d.prefix + "_log.txt").c_str());
   }
 };
 
@@ -60,7 +82,7 @@ public:
   typedef t_module<start_token_t>                    module_start_t;
   typedef t_module<end_token_t>                      module_end_t;
   typedef t_module<t_next<t_module<t_next<module_start_t, _module> >, module_end_t> > module_t;
-  struct data_t;
+  typedef t_data<module_t> data_t;
   
   void run(data_t& d)
   {
@@ -69,10 +91,6 @@ public:
     else
       t_runner<module_t>()(d, std::cout, d.verbose, d.prefix);
   }
-};
-
-template <class _module>
-struct t_workflow<_module>::data_t : public t_data<module_t>{
 };
 
 #endif

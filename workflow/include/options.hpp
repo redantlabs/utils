@@ -50,10 +50,13 @@ public:
        "Store the log in a file.")
       ("verbose,v",
        boost::program_options::value<short unsigned>(&d.verbose)->default_value(0),
-       "Verbose level (0 for none)")
-      ("output-prefix,o",
-       boost::program_options::value<std::string>(&d.prefix)->default_value(""),
-       "Prefix to add to all output files.");
+       "Verbose level (0 for none).")
+      ("directory,d",
+       boost::program_options::value<std::string>(&d.directory)->default_value(""),
+       "Output directory.")
+      ("uid,u",
+       boost::program_options::bool_switch(&d.uid)->default_value(false),
+       "Add a time based unique identifier to the output file names.");
 
    return options;
   }
@@ -104,9 +107,22 @@ public:
 template <class _module>
 class t_options_manager
 {
+
+  std::string m_application_name;
+  std::string m_helper;
+  
 public:
+  
+  t_options_manager(const std::string& application_name = "application", const std::string& helper = "Sample application.")
+    : m_application_name(application_name),
+      m_helper(helper)
+  {}
+  
   int operator()(int argc, char** argv, t_data<_module>& d)
   {
+    d.application_name = this->m_application_name;
+    d.helper = this->m_helper;
+    
     boost::program_options::options_description options = t_options<_module>()(d);
 
     boost::program_options::command_line_parser parser(argc,argv);
@@ -126,7 +142,8 @@ public:
       }
     
       if(d.help)
-	{ 
+	{
+	  std::cout << this->m_helper << std::endl;
 	  std::cout << options << std::endl;
 	  exit(EXIT_SUCCESS);
 	}

@@ -72,7 +72,7 @@ int main(int argc, char** argv)
   d.verbose = 1;
   
   //execute the workflow
-  options_manager_t options_manager;
+  options_manager_t options_manager("example_workflow", "Example for a simple workflow with options.");
   if(!options_manager(argc, argv, d))
     return 0;
   workflow_t wf;
