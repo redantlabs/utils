@@ -88,9 +88,10 @@ template <class _nt>
 class t_printer<t_module<t_sort<_nt> > >
 {
 public:
-  void operator()(t_data<t_module<t_sort<_nt> > >& d)
+  void operator()(t_data<t_module<t_sort<_nt> > >& d, std::ostream& out, short unsigned verbose)
   {
-    std::cout << "Sort done over " << d.get_nums().size() << " numbers." << std::endl;
+    if(verbose > 0)
+      out << "Sort done over " << d.get_nums().size() << " numbers." << std::endl;
   }
 };
 ```
@@ -101,9 +102,9 @@ template <class _nt>
 class t_reporter<t_module<t_sort<_nt> > >
 {
 public:
-  void operator()(t_data<t_module<t_sort<_nt> > >& d)
+  void operator()(t_data<t_module<t_sort<_nt> > >& d, const std::string& prefix)
   {
-    std::ofstream out("output.txt");
+    std::ofstream out((prefix + "_output.txt").c_str());
     for(size_t i = 0; i < d.get_nums().size(); i++) 
        out << d.get_nums()[i] << std::endl;
     out.close();
@@ -169,7 +170,7 @@ Running the defined workflow is done as follow :
 
 ```c++
   data_t d;  
-  options_manager_t om;
+  options_manager_t om("example_workflow_with_options", "Example of simple workflow with command line options");
   if(!om(argc, argv, d))
     return 0;
   workflow_t wf;
