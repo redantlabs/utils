@@ -184,23 +184,23 @@ template <>
 struct t_data<t_module<start_token_t> >{
   bool           help;//help message instead of starting the application
   bool           store_log;//switch to store the log in a file
-  std::ofstream  log;//output stream for the log (std::cout by default)
   short unsigned verbose;//verbose level (0 is none)
-  std::string    prefix;//prefix to add to all output files
   bool           uid;//add a time based unique identifier to the prefix
   std::string    directory;//prefix to add to all output files
-  std::string    application_name;
-  std::string    helper;
+  std::string    application_name;//name of the application
+  std::string    helper;//helper to display instead of running the workflow
+  std::ofstream  log;//output stream for the log if not std::cout, automatically set if needed
+  std::string    prefix;//prefix to add to all output files
   t_data()
     : help(false),
       store_log(false),
       verbose(0),
-      log(),
-      prefix("application_"),
       uid(false),
       directory("."),
       application_name("application"),
-      helper("Sample application.")
+      helper("Sample application."),
+      log(),
+      prefix("application_")
   {
   }
 };
