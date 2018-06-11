@@ -21,7 +21,7 @@ struct t_data<t_module<t_find<_nt> > >{
 //Execution
 template <class _nt>
 struct t_executer<t_module<t_find<_nt> > >{
-  void operator()(t_data<t_module<t_find<_nt> > >& d)
+  void operator()(t_data<t_module<t_find<_nt> > >& d, std::ostream& out, short unsigned verbose)
   {
     d.get_res() = t_find<_nt>()(d.get_nums(), d.get_k());
   }

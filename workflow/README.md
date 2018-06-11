@@ -44,14 +44,15 @@ The dummy parameter is not necessary but is defined just to have an additional p
 ```c++
 template <class _nt>
 struct t_executer<t_module<t_sort<_nt> > >{
-  void operator()(t_data<t_module<t_sort<_nt> > >& d)
+  void operator()(t_data<t_module<t_sort<_nt> > >& d, std::ostream& out, short unsigned verbose)
   {
+    if(verbose)
+      out << "Sorting input numbers.." << endl;
     t_sort<_nt>()(d.get_nums());
   }
 };
 ```
-
-We now have the simplest way to define the module : to use the module, we just pick a number type and typedef the module :
+The out and verbose parameters allow to print custom information during the run of the algorithm in the log. We now have the simplest way to define the module : to use the module, we just pick a number type and typedef the module :
 
 ```c++
 typedef t_module<t_sort<int> > module_sort_t;
@@ -90,24 +91,25 @@ class t_printer<t_module<t_sort<_nt> > >
 public:
   void operator()(t_data<t_module<t_sort<_nt> > >& d, std::ostream& out, short unsigned verbose)
   {
-    if(verbose > 0)
       out << "Sort done over " << d.get_nums().size() << " numbers." << std::endl;
   }
 };
 ```
-Finally, you can specify that the module reports some results into files after its execution :
+Note that if the verbose mode is set at 0, the printer will not be used anyway. Finally, you can specify that the module reports some results into files after its execution :
 
 ```c++
 template <class _nt>
 class t_reporter<t_module<t_sort<_nt> > >
 {
 public:
-  void operator()(t_data<t_module<t_sort<_nt> > >& d, const std::string& prefix)
+  void operator()(t_data<t_module<t_sort<_nt> > >& d, std::ostream& out, short unsigned verbose, const std::string& prefix)
   {
-    std::ofstream out((prefix + "_output.txt").c_str());
+    if(verbose > 0)
+      out << "Saving sorted numbers " << std::endl;
+    std::ofstream ofs((prefix + "_sorted.txt").c_str());
     for(size_t i = 0; i < d.get_nums().size(); i++) 
-       out << d.get_nums()[i] << std::endl;
-    out.close();
+       ofs << d.get_nums()[i] << std::endl;
+    ofs.close();
   }
 };
 ```

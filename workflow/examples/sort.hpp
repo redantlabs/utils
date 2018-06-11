@@ -20,7 +20,7 @@ struct t_data<t_module<t_sort<_nt> > >{
 //Execution
 template <class _nt>
 struct t_executer<t_module<t_sort<_nt> > >{
-  void operator()(t_data<t_module<t_sort<_nt> > >& d)
+  void operator()(t_data<t_module<t_sort<_nt> > >& d, std::ostream& out, short unsigned verbose)
   {
     t_sort<_nt>()(d.get_nums());
   }
