@@ -88,9 +88,10 @@ template <class _nt>
 class t_printer<t_module<t_sort<_nt> > >
 {
 public:
-  void operator()(t_data<t_module<t_sort<_nt> > >& d)
+  void operator()(t_data<t_module<t_sort<_nt> > >& d, std::ostream& out, short unsigned verbose)
   {
-    std::cout << "Sort done over " << d.get_nums().size() << " numbers." << std::endl;
+    if(verbose > 0)
+      out << "Sort done over " << d.get_nums().size() << " numbers." << std::endl;
   }
 };
 ```
@@ -101,9 +102,9 @@ template <class _nt>
 class t_reporter<t_module<t_sort<_nt> > >
 {
 public:
-  void operator()(t_data<t_module<t_sort<_nt> > >& d)
+  void operator()(t_data<t_module<t_sort<_nt> > >& d, const std::string& prefix)
   {
-    std::ofstream out("output.txt");
+    std::ofstream out((prefix + "_output.txt").c_str());
     for(size_t i = 0; i < d.get_nums().size(); i++) 
        out << d.get_nums()[i] << std::endl;
     out.close();
@@ -169,10 +170,38 @@ Running the defined workflow is done as follow :
 
 ```c++
   data_t d;  
-  options_manager_t om;
+  options_manager_t om("example_workflow_with_options", "Example of simple workflow with command line options");
   if(!om(argc, argv, d))
     return 0;
   workflow_t wf;
   wf.run(d);
 ```
+If you want to manage the options yourself, you will need to know how to configure the workflow variables. The workflow variables are just the variables that will be put in the data_t structure by the workflow for managing the behaviour of the workflow. The definition of the class is found in the file [include/workflow.hpp](include/workflow.hpp) :
 
+```c++
+//Data in the workflow
+template <>
+struct t_data<t_module<start_token_t> >{
+  bool           help;//help message instead of starting the application
+  bool           store_log;//switch to store the log in a file
+  short unsigned verbose;//verbose level (0 is none)
+  bool           uid;//add a time based unique identifier to the prefix
+  std::string    directory;//prefix to add to all output files
+  std::string    application_name;//name of the application
+  std::string    helper;//helper to display instead of running the workflow
+  std::ofstream  log;//output stream for the log if not std::cout, automatically set if needed
+  std::string    prefix;//prefix to add to all output files
+  t_data()
+    : help(false),
+      store_log(false),
+      verbose(0),
+      uid(false),
+      directory("."),
+      application_name("application"),
+      helper("Sample application."),
+      log(),
+      prefix("application_")
+  {
+  }
+};
+```
