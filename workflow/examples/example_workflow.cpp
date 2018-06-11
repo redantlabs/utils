@@ -58,7 +58,6 @@ int main(int argv, char** argc)
   d.nums.push_back(5);
   d.k = 2;
   d.res = -1;
-  d.verbose = 1;
   
   //execute the workflow
   workflow_t wf;

@@ -1,10 +1,18 @@
 # Union-Find
 
-The [Union-Find](https://fr.wikipedia.org/wiki/Union-find) data structure consists on maintaining **disjoint subsets** of a
-set of data. A disjoint subset is also called an **independent set**, or **connected component** when the data refers to a graph. The data is represented by indices enumarating the data starting at 0. These indices are also called **vertices**. There are three main operations on the [Union-Find](https://fr.wikipedia.org/wiki/Union-find) data structure :
-- *make_set* : creates a new independent set with one vertex,
-- *find_set* : finds the independent set associated to an input vertex,
-- *union_sets* : merges the two independent sets associated to two input vertices. 
+This package provides a framework for managing software workflows
+using redundant algorithms.  The
+[Union-Find](https://fr.wikipedia.org/wiki/Union-find) data structure
+consists on maintaining **disjoint subsets** of a set of data. A
+disjoint subset is also called an **independent set**, or **connected
+component** when the data refers to a graph. The data is represented
+by indices enumarating the data starting at 0. These indices are also
+called **vertices**. There are three main operations on the
+[Union-Find](https://fr.wikipedia.org/wiki/Union-find) data structure
+: - *make_set* : creates a new independent set with one vertex, -
+*find_set* : finds the independent set associated to an input vertex,
+- *union_sets* : merges the two independent sets associated to two
+input vertices.
 
 This package offers an implementation of [Union-Find](https://fr.wikipedia.org/wiki/Union-find) with supplemental features :
 - *Data manipulation* : gathering vertices representing each independent set, or all vertices in one independent set,

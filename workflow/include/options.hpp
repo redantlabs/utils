@@ -34,6 +34,31 @@ public:
   }
 };
 
+template <>
+class t_options<t_module<start_token_t> >
+{
+public:
+  boost::program_options::options_description operator()(t_data<t_module<start_token_t> >& d)
+  {
+    boost::program_options::options_description options("General options");
+   options.add_options()
+      ("help,h",
+       boost::program_options::bool_switch(&d.help)->default_value(false),
+       "Print this help message.")
+      ("log,l",
+       boost::program_options::bool_switch(&d.store_log)->default_value(false),
+       "Store the log in a file.")
+      ("verbose,v",
+       boost::program_options::value<short unsigned>(&d.verbose)->default_value(0),
+       "Verbose level (0 for none)")
+      ("output-prefix,o",
+       boost::program_options::value<std::string>(&d.prefix)->default_value(""),
+       "Prefix to add to all output files.");
+
+   return options;
+  }
+};
+
 template <class _module1, class _module2>
 class t_options<t_module<t_next<_module1, _module2> > >{
 public:
@@ -82,15 +107,8 @@ class t_options_manager
 public:
   int operator()(int argc, char** argv, t_data<_module>& d)
   {
-    bool help;
-    boost::program_options::options_description options("General options");
-    options.add_options()
-      ("help,h",
-       boost::program_options::bool_switch(&help)->default_value(false),
-       "Print this help message.");
+    boost::program_options::options_description options = t_options<_module>()(d);
 
-    options.add(t_options<_module>()(d));
-    
     boost::program_options::command_line_parser parser(argc,argv);
     parser.allow_unregistered().options(options);
     boost::program_options::parsed_options parsed = parser.run();
@@ -107,7 +125,7 @@ public:
 	exit(EXIT_FAILURE);
       }
     
-      if(help)
+      if(d.help)
 	{ 
 	  std::cout << options << std::endl;
 	  exit(EXIT_SUCCESS);

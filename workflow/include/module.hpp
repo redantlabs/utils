@@ -41,23 +41,23 @@ class t_executer{public: void operator()(t_data<_module>& d){}};
 //Printer : it aims to be redefined for each module to
 //specify the statistics to print after the execution of a module.
 template <class _module>
-class t_printer{public: void operator()(t_data<_module>& d){}};
+class t_printer{public: void operator()(t_data<_module>& d, std::ostream& out, short unsigned verbose){}};
 
 //Reporter : it aims to be redefined for each module to specify how to
 //report the results in a module.
 template <class _module>
-class t_reporter{public: void operator()(t_data<_module>& d){}};
+class t_reporter{public: void operator()(t_data<_module>& d, const std::string& prefix){}};
 
 //Runner : it runs for each module its executer, its printer and its
 //reporter. Not to be redefined !
 template <class _module>
 class t_runner{
 public:
-  void operator()(t_data<_module>& d)
+  void operator()(t_data<_module>& d, std::ostream& out, short unsigned verbose, const std::string& prefix)
   {
     t_executer<_module>()(d);
-    t_printer<_module>()(d);
-    t_reporter<_module>()(d);
+    t_printer<_module>()(d, out, verbose);
+    t_reporter<_module>()(d, prefix);
   }
 };
 

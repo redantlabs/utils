@@ -25,8 +25,8 @@ typedef t_module<t_condition<predicate_t, module_find_t> > module_find_if_t;
 typedef t_module<t_next<module_sort_t, module_find_if_t> > module_t;
 
 //Workflow encapsulating the whold
-typedef t_workflow<module_t>               workflow_t;
-typedef t_options_manager<module_t>        options_manager_t;
+typedef t_workflow<module_t>                    workflow_t;
+typedef t_options_manager<workflow_t::module_t> options_manager_t;
 
 //Data definition
 struct data_t : public workflow_t::data_t
