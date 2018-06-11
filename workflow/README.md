@@ -176,4 +176,32 @@ Running the defined workflow is done as follow :
   workflow_t wf;
   wf.run(d);
 ```
+If you want to manage the options yourself, you will need to know how to configure the workflow variables. The workflow variables are just the variables that will be put in the data_t structure by the workflow for managing the behaviour of the workflow. The definition of the class is found in the file [include/workflow.hpp](include/workflow.hpp) :
 
+```c++
+//Data in the workflow
+template <>
+struct t_data<t_module<start_token_t> >{
+  bool           help;//help message instead of starting the application
+  bool           store_log;//switch to store the log in a file
+  std::ofstream  log;//output stream for the log (std::cout by default)
+  short unsigned verbose;//verbose level (0 is none)
+  std::string    prefix;//prefix to add to all output files
+  bool           uid;//add a time based unique identifier to the prefix
+  std::string    directory;//prefix to add to all output files
+  std::string    application_name;
+  std::string    helper;
+  t_data()
+    : help(false),
+      store_log(false),
+      verbose(0),
+      log(),
+      prefix("application_"),
+      uid(false),
+      directory("."),
+      application_name("application"),
+      helper("Sample application.")
+  {
+  }
+};
+```
