@@ -1,8 +1,11 @@
 #include <iostream>
 #include <string>
-#include <workflow.hpp>
+#include <utils/workflow.hpp>
 #include "sort.hpp"
 #include "find.hpp"
+
+using namespace utils;
+using namespace workflow;
 
 //Todo :
 

@@ -1,6 +1,7 @@
-#include <union_find.hpp>
+#include <utils/union_find.hpp>
 #include <iostream>
 
+using namespace utils;
 typedef t_union_find<true>     union_find_t;
 typedef union_find_t::vertex_t vertex_t;
 

@@ -1,4 +1,4 @@
-#include <module.hpp>
+#include <utils/workflow/module.hpp>
 #include <algorithm>
 #include <vector>
 
@@ -11,18 +11,23 @@ struct t_sort{
   }
 };
 
-//Data
-template <class _nt>
-struct t_data<t_module<t_sort<_nt> > >{
-  virtual std::vector<_nt>& get_nums() = 0;
-};
-
-//Execution
-template <class _nt>
-struct t_executer<t_module<t_sort<_nt> > >{
-  void operator()(t_data<t_module<t_sort<_nt> > >& d, std::ostream& out, short unsigned verbose)
-  {
-    t_sort<_nt>()(d.get_nums());
+namespace utils{
+  namespace workflow{
+    
+    //Data
+    template <class _nt>
+    struct t_data<t_module<t_sort<_nt> > >{
+      virtual std::vector<_nt>& get_nums() = 0;
+    };
+    
+    //Execution
+    template <class _nt>
+    struct t_executer<t_module<t_sort<_nt> > >{
+      void operator()(t_data<t_module<t_sort<_nt> > >& d, std::ostream& out, short unsigned verbose)
+      {
+	t_sort<_nt>()(d.get_nums());
+      }
+    };
   }
-};
-
+}
+    

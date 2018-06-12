@@ -1,9 +1,13 @@
 #include <iostream>
 #include <string>
-#include <workflow.hpp>
-#include <options.hpp>
+#include <utils/workflow.hpp>
+#include <utils/workflow_options.hpp>
 #include "sort.hpp"
 #include "find.hpp"
+
+using namespace utils;
+using namespace workflow;
+
 //Problem : We cannot have several instances of the same module,
 //otherwise we would have multiple inheritences from the same
 //class : is that a problem ?
@@ -29,7 +33,7 @@ typedef t_module<t_next<module_sort_opt_t, module_find_if_t> > module_t;
 
 //Workflow encapsulating the whole
 typedef t_workflow<module_t>                    workflow_t;
-typedef t_options_manager<workflow_t::module_t> options_manager_t;
+typedef t_workflow_options_manager<workflow_t::module_t> options_manager_t;
 
 //Data definition
 struct data_t : public workflow_t::data_t
@@ -46,20 +50,22 @@ struct data_t : public workflow_t::data_t
 };
 
 //options for find and sort module
-template <>
-class t_options<module_t>
-{
-public:
-  boost::program_options::options_description operator()(t_data<module_t>& d)
+namespace utils{
+  template <>
+  class t_workflow_options<module_t>
   {
-    boost::program_options::options_description options("Find options");
-    options.add_options()
-      ("k",
-       boost::program_options::value<std::size_t>(&d.get_k())->default_value(0),
-       "kth position.");
-    return options;
-  }
-};
+  public:
+    boost::program_options::options_description operator()(t_data<module_t>& d)
+    {
+      boost::program_options::options_description options("Find options");
+      options.add_options()
+	("k",
+	 boost::program_options::value<std::size_t>(&d.get_k())->default_value(0),
+	 "kth position.");
+      return options;
+    }
+  };
+}
 
 int main(int argc, char** argv)
 {
