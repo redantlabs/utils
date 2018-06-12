@@ -139,6 +139,14 @@ There are different connectors depending on how modules have to be connected :
 - *t_condition<_predicate,_module1,_module2>* : takes a predicate and runs the first module if the predicates is true, the second otherwise;
 - *t_loop<_predicate,_module>* : takes a predicate and runs the module while the predicate returns true.
 
+It is also possible to make an optional module *t_optional<_module,
+const char[], const char[]>* , meaning that the module will not be
+executed unless the *optional* attribute of the specialized class
+t_data<t_optional<_module, const char[], const char[]>> is set to
+true. Using command line options, it just adds a new option in an
+*Optional* section whose name is the second template parameter (the
+third one is the helper) and that allows to execute the module.
+
 We now define the workflow from our module :
 
 ```c++

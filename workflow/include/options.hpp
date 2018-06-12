@@ -65,13 +65,106 @@ public:
   }
 };
 
+template <class _module, const char* OPTION_NAME, const char* OPTION_HELPER>
+class t_options<t_module<t_optional<_module, OPTION_NAME, OPTION_HELPER> > >
+{
+public:
+  boost::program_options::options_description operator()(t_data<t_module<t_optional<_module, OPTION_NAME, OPTION_HELPER> > >& d)
+  {
+    return t_options<_module>()(d);
+  }
+};
+
+template <class _module>
+class t_options_for_optional
+{
+public:
+  void operator()(t_data<_module>& d, boost::program_options::options_description& options){}
+};
+
+template <class _module, const char* OPTION_NAME, const char* OPTION_HELPER>
+class t_options_for_optional<t_module<t_optional<_module, OPTION_NAME, OPTION_HELPER> > >{
+public:
+  void operator()(t_data<t_module<t_optional<_module, OPTION_NAME, OPTION_HELPER> > >& d, boost::program_options::options_description& options)
+  {
+    options.add_options()(OPTION_NAME, 
+			  boost::program_options::bool_switch(&d.optional)->default_value(false),
+			  OPTION_HELPER);
+  }
+};
+
+template <class _module1, class _module2>
+class t_options_for_optional<t_module<t_next<_module1, _module2> > >
+{
+public:
+  void operator()(t_data<t_module<t_next<_module1, _module2> > >& d, boost::program_options::options_description& options)
+  {
+    t_options_for_optional<_module1>()(d, options);
+    t_options_for_optional<_module2>()(d, options);
+  }
+};
+
+template <class _module1, class _module2>
+class t_options_for_optional<t_module<t_conjunction<_module1, _module2> > >
+{
+public:
+  void operator()(t_data<t_module<t_conjunction<_module1, _module2> > >& d, boost::program_options::options_description& options)
+  {
+    t_options_for_optional<_module1>()(d, options);
+    t_options_for_optional<_module2>()(d, options);
+  }
+};
+
+template <class _predicate, class _module1, class _module2>
+class t_options_for_optional<t_module<t_condition<_predicate, _module1, _module2> > >
+{
+public:
+  void operator()(t_data<t_module<t_condition<_predicate, _module1, _module2> > >& d, boost::program_options::options_description& options)
+  {
+    t_options_for_optional<_module1>()(d, options);
+    t_options_for_optional<_module2>()(d, options);
+  }
+};
+
+template <class _predicate, class _module>
+class t_options_for_optional<t_module<t_loop<_predicate, _module> > >
+{
+public:
+  void operator()(t_data<t_module<t_loop<_predicate, _module> > >& d, boost::program_options::options_description& options)
+  {
+    t_options_for_optional<_module>()(d, options);
+  }
+};
+
+template <class _module>
+class t_options<t_module<t_next<t_module<start_token_t>, _module> > >
+{
+public:
+  boost::program_options::options_description operator()(t_data<t_module<t_next<t_module<start_token_t>, _module> > >& d)
+  {
+    boost::program_options::options_description options = t_options<t_module<start_token_t> >()(d);
+    
+    boost::program_options::options_description optionals("Optional modules");
+    t_options_for_optional<_module>()(d, optionals);
+    if(optionals.options().size() > 0)
+      options.add(optionals);
+    
+    boost::program_options::options_description opt = t_options<_module>()(d);
+    if(opt.options().size() > 0)
+      options.add(opt);
+    return options;
+  }
+};
+
 template <class _module1, class _module2>
 class t_options<t_module<t_next<_module1, _module2> > >{
 public:
   boost::program_options::options_description operator()(t_data<t_module<t_next<_module1, _module2> > >& d)
   {
     boost::program_options::options_description options = t_options<_module1>()(d);
-    options.add(t_options<_module2>()(d));
+    boost::program_options::options_description opt = t_options<_module2>()(d);
+    if(opt.options().size() > 0)
+      options.add(opt);
     return options;
   }
 };
@@ -82,7 +175,9 @@ public:
   boost::program_options::options_description operator()(t_data<t_module<t_conjunction<_module1, _module2> > >& d)
   {
     boost::program_options::options_description options = t_options<_module1>()(d);
-    options.add(t_options<_module2>()(d));
+    boost::program_options::options_description opt = t_options<_module2>()(d);
+    if(opt.options().size() > 0)
+      options.add(opt);
     return options;
   }
 };
@@ -93,7 +188,9 @@ public:
   boost::program_options::options_description operator()(t_data<t_module<t_condition<_predicate, _module1, _module2> > >& d)
   {
     boost::program_options::options_description options = t_options<_module1>()(d);
-    options.add(t_options<_module2>()(d));
+    boost::program_options::options_description opt = t_options<_module2>()(d);
+    if(opt.options().size() > 0)
+      options.add(opt);
     return options;
   }
 };

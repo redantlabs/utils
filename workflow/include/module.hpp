@@ -49,9 +49,9 @@ template <class _module>
 class t_reporter{public: void operator()(t_data<_module>& d, std::ostream& out, short unsigned verbose, const std::string& prefix){}};
 
 //Runner : it runs for each module its executer, its printer and its
-//reporter. Not to be redefined !
+//reporter. Not to be custom specialized !
 template <class _module>
-class t_runner{
+class t_runner_not_to_specialize{
 public:
   void operator()(t_data<_module>& d, std::ostream& out, short unsigned verbose, const std::string& prefix)
   {
@@ -61,5 +61,8 @@ public:
     t_reporter<_module>()(d, out, verbose, prefix);
   }
 };
+
+template <class _module>
+using t_runner = t_runner_not_to_specialize<_module>;
 
 #endif

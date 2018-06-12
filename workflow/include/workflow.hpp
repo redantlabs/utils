@@ -17,6 +17,7 @@ permissions and limitations under the License.
 #define _WORKFLOW_HPP_
 
 #include <module.hpp>
+#include <optional.hpp>
 #include <next.hpp>
 #include <conjunction.hpp>
 #include <condition.hpp>
@@ -24,6 +25,7 @@ permissions and limitations under the License.
 #include <fstream>
 #include <sstream>
 #include <chrono>
+
 
 //Token to specify the start module, that is the first module to be
 //ran.

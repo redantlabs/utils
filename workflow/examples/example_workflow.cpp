@@ -4,14 +4,8 @@
 #include "sort.hpp"
 #include "find.hpp"
 
-//Problem : We cannot have several instances of the same module,
-//otherwise we would have multiple inheritences from the same
-//class : is that a problem ?
-
 //Todo :
 
-//-- Handle the printer
-//-- Handle the report (should be for specific modules)
 //-- Handle workflow analysis (graphviz, workflow integrity, etc...)
 
 //Sort a vector, then find the kth element iff k < nums.size()
@@ -30,7 +24,7 @@ struct predicate_t{
 typedef t_module<t_condition<predicate_t, module_find_t> > module_find_if_t;
 typedef t_module<t_next<module_sort_t, module_find_if_t> > module_t;
 
-//Workflow encapsulating the whold
+//Workflow encapsulating the whole
 typedef t_workflow<module_t>               workflow_t;
 
 //Data definition

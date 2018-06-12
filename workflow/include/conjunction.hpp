@@ -28,7 +28,7 @@ template <class _module1, class _module2>
 struct t_data<t_module<t_conjunction<_module1, _module2> > > : public t_data<_module1>, public t_data<_module2>{};
 
 template <class _module1, class _module2>
-class t_runner<t_module<t_conjunction<_module1, _module2> > >{
+class t_runner_not_to_specialize<t_module<t_conjunction<_module1, _module2> > >{
 public:
   void operator()(t_data<t_module<t_conjunction<_module1, _module2> > >& d, std::ostream& out, short unsigned verbose, const std::string& prefix){
     t_runner<_module1>()(d, out, verbose, prefix);

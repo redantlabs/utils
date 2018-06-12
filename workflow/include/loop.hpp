@@ -27,7 +27,7 @@ template <class _predicate, class _module>
 struct t_data<t_module<t_loop<_predicate, _module> > > : public t_data<_module>{};
 
 template <class _predicate, class _module>
-class t_runner<t_module<t_loop<_predicate, _module> > >{
+class t_runner_not_to_specialize<t_module<t_loop<_predicate, _module> > >{
 public:
   void operator()(t_data<t_module<t_loop<_predicate, _module> > >& d, std::ostream& out, short unsigned verbose, const std::string& prefix){
     _predicate pred;
