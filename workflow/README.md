@@ -3,7 +3,7 @@
 This package provides a framework for managing software workflows. In particular, it has the following
 features :
 - *full genericity* : it uses **partial template specialization** such that it can be easily integrated in any other framework,
-- *modularity* : algorithms are encapsulated in **modules** that can be easily connected to each other in various ways,
+- *modularity* : algorithms are encapsulated in **modules** that can be reused and easily connected to each other,
 - *applicability* : creating an executable with **command-line options** is straight forward and can be customized as well, 
 - *analysis* : several tools are provided for **visualizing** the workflow and asserting its **integrity**.
 
